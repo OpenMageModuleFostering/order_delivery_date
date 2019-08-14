@@ -10,7 +10,7 @@
 <config>
     <modules>
         <Bc_Deliverydate>
-            <version>0.1.8</version>
+            <version>0.1.9</version>
         </Bc_Deliverydate>
     </modules>
     <frontend>
@@ -54,29 +54,17 @@
     </frontend>
     <admin>
         <routers>
-            <deliverydate>
-                <use>admin</use>
-                <args>
-                    <module>Bc_Deliverydate</module>
-                    <frontName>deliverydate</frontName>
-                </args>
-            </deliverydate>
+            <adminhtml>
+                    <args>
+                    <modules>
+                        <deliverydate after="Mage_Adminhtml">Bc_Deliverydate_Adminhtml</deliverydate>
+                        </modules>
+                    </args>
+                </adminhtml>    
         </routers>
     </admin>
     <adminhtml>
-        <!--<menu>
-        <deliverydate module="deliverydate">
-        <title>Deliverydate</title>
-        <sort_order>71</sort_order>               
-        <children>
-        <items module="deliverydate">
-        <title>Manage Items</title>
-        <sort_order>0</sort_order>
-        <action>deliverydate/adminhtml_deliverydate</action>
-        </items>
-        </children>
-        </deliverydate>
-        </menu>-->
+       
         <acl>
             <resources>
                 <all>
