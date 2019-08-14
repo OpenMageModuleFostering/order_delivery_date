@@ -37,8 +37,8 @@
 <form action="" id="checkout-agreements" onsubmit="return false;">  
     <div class="buttons-set arrival-info">
         <?php 
-            if (Mage::getStoreConfig('deliverydate/deliverydate_general/on_which_page')==2){
-                if(Mage::helper('deliverydate')->isEnable()){
+            if(Mage::getStoreConfig('deliverydate/deliverydate_general/enabled')){
+                if (Mage::getStoreConfig('deliverydate/deliverydate_general/on_which_page')==2){
                     echo $this->getLayout()->createBlock('core/html_calendar')->setTemplate('deliverydate/js/calendar.phtml')->toHtml() ;
                     echo $this->getLayout()->createBlock('deliverydate/deliverydate')->setTemplate('deliverydate/deliverydate.phtml')->toHtml(); 
                 }

@@ -10,7 +10,7 @@
 <config>
     <modules>
         <Bc_Deliverydate>
-            <version>0.1.7</version>
+            <version>0.1.8</version>
         </Bc_Deliverydate>
     </modules>
     <frontend>
