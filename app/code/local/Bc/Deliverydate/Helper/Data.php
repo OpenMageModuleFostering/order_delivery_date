@@ -44,6 +44,7 @@
             return $formatedDate;         
         }
         public function saveShippingArrivalDate($observer){
+
             $order = $observer->getEvent()->getOrder();
             if (Mage::getStoreConfig('deliverydate/deliverydate_general/on_which_page')==2){
                 $desiredArrivalDate = Mage::helper('deliverydate')->getFormatedDeliveryDateToSave(Mage::app()->getRequest()->getParam('shipping_arrival_date'));
@@ -57,4 +58,15 @@
                 $order->setShippingArrivalDate($desiredArrivalDate);
             }
         }
+        public function saveShippingArrivalDateAdmin($observer){
+          
+            $order = $observer->getEvent()->getOrder();
+            $cart = Mage::app()->getRequest()->getParams();
+            $desiredArrivalDate = Mage::helper('deliverydate')->getFormatedDeliveryDateToSave($cart['shipping_arrival_date_display']);
+            $shipping_arrival_comments = $cart['shipping_arrival_comments'];
+            $order->setShippingArrivalComments($shipping_arrival_comments);
+            $order->setShippingArrivalDate($desiredArrivalDate);
+
+        }
+
 }

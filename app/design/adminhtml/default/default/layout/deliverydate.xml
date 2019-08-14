@@ -4,6 +4,13 @@
         <reference name="content">
             <block type="deliverydate/adminhtml_deliverydate" name="deliverydate" />
         </reference>
+        <reference name="head">    
+            <action method="addItem"><type>js_css</type><name>calendar/calendar-win2k-1.css</name><params></params></action>
+            <action method="addItem"><type>js</type><name>calendar/calendar.js</name></action>
+            <action method="addItem"><type>js</type><name>calendar/calendar-setup.js</name></action>
+            <block type="core/html_calendar" name="head.calendar" as="calendar" template="deliverydate/js/calendar.phtml">
+            </block>    
+        </reference>
     </deliverydate_adminhtml_deliverydate_index>
     <adminhtml_sales_order_view>
         <reference name="order_tab_info">
@@ -12,4 +19,5 @@
             </action>
         </reference>
     </adminhtml_sales_order_view>
+    
 </layout>
