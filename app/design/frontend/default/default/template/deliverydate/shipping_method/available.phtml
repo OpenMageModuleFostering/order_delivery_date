@@ -71,8 +71,10 @@
         </dd>
         <?php endforeach; ?>
     <?php 
-        if (Mage::getStoreConfig('deliverydate/deliverydate_general/on_which_page')==1){
-            echo $this->getLayout()->createBlock('deliverydate/deliverydate')->setTemplate('deliverydate/deliverydate.phtml')->toHtml(); 
+        if ( Mage::getStoreConfig('deliverydate/deliverydate_general/on_which_page')==1){
+            if(Mage::helper('deliverydate')->isEnable()){
+                echo $this->getLayout()->createBlock('deliverydate/deliverydate')->setTemplate('deliverydate/deliverydate.phtml')->toHtml(); 
+            }
         }
     ?>
 </dl>

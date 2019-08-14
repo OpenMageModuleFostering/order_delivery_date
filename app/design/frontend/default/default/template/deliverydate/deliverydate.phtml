@@ -1,33 +1,47 @@
 <dd>
     <ul style="border-top: 1px solid #D1D1D1; margin-top: 12px; padding-top: 10px;">
     <li>
-        <label for="page_date-end">Delivery Date:</label>
+        <label for="page_date-end"><?php echo $this->__('Delivery Date:'); ?></label>
         <input name="shipping_arrival_date_display" id="shipping_arrival_date_display" value="" title="date" class=" input-text" style="width: 100px;" type="text"> <img src="<?php echo Mage::getBaseUrl('skin')?>adminhtml/default/default/images/grid-cal.gif" alt="" class="v-middle" id="shipping_arrival_date_trig" title="Select Date" style=""> <a href="javascript:void(0)" id="link_reset" style="margin-left:5px;"><img src="<?php echo $this->getSkinUrl('images/ico_reset.png');?>" alt="" class="v-middle" title="Reset"></a>
         <input name="shipping_arrival_date" id="shipping_arrival_date" value="" onChange="shippingArrivalDateOnChange(this); return false;" title="date"  type="hidden"> 
     </li>
     <li>
-        <label for="shipping_arrival_comments">Delivery Comments:</label><br/>
+        <label for="shipping_arrival_comments"><?php echo $this->__('Delivery Comments:'); ?></label><br/>
         <textarea cols="65" rows="8" name="shipping_arrival_comments" id="shipping_arrival_comments"></textarea></li>
     <li>  <i><?php echo Mage::getStoreConfig('deliverydate/deliverydate_general/deliverydate_html'); ?></i>
     </li>
 </dd>
 <?php 
-    $dayoff = Mage::getStoreConfig('deliverydate/deliverydate_general/deliverydate_dayoff');
+   
+    $dayoff = Mage::getStoreConfig('deliverydate/deliverydate_dayoff/deliverydate_dayoff');
+    $nonworking_days   = Mage::helper('deliverydate')->getNonWorkingDays();
+    $nonworking_period = Mage::helper('deliverydate')->getNonWorkingPeriod();
+
+    $day_diff   = Mage::getStoreConfig('deliverydate/deliverydate_general/deliverytime_day_diff');
+    $start_date = date('Y-m-d H:i:s');
+    $end_date   = date('Y-m-d H:i:s', strtotime('+'.$day_diff.' days'));
+
+    $date_from = strtotime(date('Y-m-d', strtotime($start_date)));
+    $date_to   = strtotime(date('Y-m-d', strtotime($end_date))); 
+
+    for ($i=$date_from; $i<=$date_to; $i+=86400) {  
+        $non_deliverd_dates[] = date("Y-m-d", $i);  
+    }  
+
+    foreach($non_deliverd_dates as $non_deliverd_date)
+    {
+        $non_deliverd_days = array(
+            'day'   => date('d', strtotime($non_deliverd_date)),
+            'month' => date('m', strtotime($non_deliverd_date)),
+            'year'  => date('Y', strtotime($non_deliverd_date)),
+        );
+        $non_deliverd_dates_array[] = $non_deliverd_days;
+    } 
+    $off_days = array_merge($nonworking_days,$nonworking_period,$non_deliverd_dates_array);
 ?>
 
 <script type="text/javascript">
-    //<![CDATA[
-    /*Calendar.setup({
-    inputField: "shipping_arrival_date",
-    ifFormat: "%m/%e/%Y",
-    showsTime: false,
-    button: "shipping_arrival_date_trig",
-    align: "Bl",
-    singleClick : true ,
-    disableFunc: function(date) {
-    return date.getMonth() === 1; // Sunday is 0, Monday is 1, and so on
-    }
-    });*/
+
 
     Calendar.prototype._init = function (firstDayOfWeek, date) {
         var today = new CalendarDateObject(),
@@ -48,13 +62,8 @@
         var month = date.getMonth();
         var mday = date.getDate();
         var no_days = date.getMonthDays();
-        /* Added By B.C. on date 18/02/2013 */
         var check_flag = false;
-        /* END */
 
-        // calendar voodoo for computing the first day that would actually be
-        // displayed in the calendar, even if it's from the previous month.
-        // WARNING: this is magic. ;-)
         date.setDate(1);
         var day1 = (date.getDay() - this.firstDayOfWeek) % 7;
         if (day1 < 0)
@@ -139,13 +148,11 @@
                         check_flag=false;
                     }
                 }else{
-                    /* Added By B.C. on date 18/02/2013 */
                     if (!this.multiple && current_month
                         && iday == mday && this.hiliteToday) {
                         check_flag=true;
                     }
 
-                    /* END */
                 }
             }
             if (!(hasdays || this.showsOtherMonths))
@@ -155,16 +162,16 @@
         this.onSetTime();
         this.table.style.visibility = "visible";
         this._initMultipleDates();
-        // PROFILE
-        // this.tooltips.innerHTML = "Generated in " + ((new CalendarDateObject()) - today) + " ms";
     };
 
     var dayoff = '<?php echo $dayoff; ?>';
+    var spe_dayoff = '<?php echo json_encode($off_days); ?>';
     var test_flag = false;
+    var is_time = <?php echo Mage::getStoreConfig('deliverydate/deliverydate_general/deliverytime_enable_time'); ?>;
     Calendar.setup({
             inputField: "shipping_arrival_date",
             ifFormat: "%Y-%mm-%ee %H:%M:%S",
-            showsTime: true,
+            showsTime: is_time,
             button: "shipping_arrival_date_trig",
             align: "Bl",
             singleClick :true,
@@ -197,8 +204,14 @@
                     }
                     else
                         {
-                        document.getElementById('shipping_arrival_date_display').value=y1+"-"+m1+"-"+d1+" "+h1+":"+min1;
-                        document.getElementById('shipping_arrival_date').value=y1+"-"+m1+"-"+d1+" "+h1+":"+min1;
+                        if(is_time == 1){
+                            document.getElementById('shipping_arrival_date_display').value=y1+"-"+m1+"-"+d1+" "+h1+":"+min1;
+                            document.getElementById('shipping_arrival_date').value=y1+"-"+m1+"-"+d1+" "+h1+":"+min1;
+                        }else{
+                            document.getElementById('shipping_arrival_date_display').value=y1+"-"+m1+"-"+d1 ;
+                            document.getElementById('shipping_arrival_date').value=y1+"-"+m1+"-"+d1 ;
+
+                        }
                         calendar.hide();
                     }
                 }
@@ -214,23 +227,36 @@
                 var d = calendar.date.getDate();
 
                 var day_off_array = dayoff.split(",") ;
+                var date_off_array = [];
+
+                date_off_array[y] = spe_dayoff.evalJSON();
 
                 currentTime = new Date();
                 var d1=currentTime.getDate();
                 var m1=currentTime.getMonth();
                 var y1=currentTime.getFullYear();
                 var counter = 1;
-                for (var i=0; i<day_off_array.length;i++){
-                    if (day_off_array[i]>=0 && day_off_array[i]!=''){
-                        if (date.getDay()==day_off_array[i]){
-                            if (date.getDate()==currentTime.getDate()){
-                                test_flag=true;
-                            }
-                            return true;
+
+                var weekend_days = [];
+                var today_date =  new Date();
+
+                if (date <= today_date  )
+                    return true;
+                for (var i in weekend_days) 
+                if (weekend_days[i] == date.getDay()) 
+                    return true;
+                if (date_off_array[y])
+                    {   
+                    for(var j =0;j<=date_off_array[y].length;j++)
+                    {                 
+                        var no_delivery = date_off_array[y][j];
+                        if (no_delivery){
+
+                            if ((no_delivery['day'] == date.getDate() && no_delivery['month'] == date.getMonth()+1 && no_delivery['year'] == date.getFullYear() ) ||day_off_array[j] == date.getDay()) 
+                                return true;
                         }
                     }
                 }
-
                 if(y < y1)
                     {
                     return true;
@@ -249,13 +275,7 @@
         displayDate.setValue(date);
     }
 
-    function resetArrivalDate()
-    {
-        //clear both fields
 
-    }
-    //MRD added disable field to only allow calendar input
-    //TODO: need to enable field when form is submitted
     Form.Element.disable('shipping_arrival_date_display');
     Event.observe($('link_reset'),'click',function(){
             $('shipping_arrival_date').setValue('');
@@ -263,3 +283,5 @@
     });
     //]]>
     </script>
+
+    

@@ -10,7 +10,7 @@
 <config>
     <modules>
         <Bc_Deliverydate>
-            <active>true</active>
+            <active>false</active>
             <codePool>local</codePool>
         </Bc_Deliverydate>
     </modules>

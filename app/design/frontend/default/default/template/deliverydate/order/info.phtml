@@ -72,25 +72,35 @@
                         <?php echo $this->escapeHtml($_order->getShippingDescription()); ?>
                         <br/>
                         <?php 
-                            $shipping_arrival_date = $_order->getShippingArrivalDate(); 
-                            
+                            if(Mage::getStoreConfig('deliverydate/deliverydate_general/enabled'))
+                            {
+                                $shipping_arrival_date = $_order->getShippingArrivalDate(); 
+
                                 $date_format = Mage::getStoreConfig('deliverydate/deliverydate_general/deliverydate_format');
                                 $time_format = Mage::getStoreConfig('deliverydate/deliverydate_general/deliverytime_format');
-                                if ($date_format=='')
+                                if ($date_format==''){
                                     $date_format='d/M/Y';
-                                if($time_format=='')
+                                }
+                                if($time_format==''){
                                     $date_format.=" ,g:i a";
-                                else
-                                    $date_format.=" ".$time_format;
+                                }else{
+                                    $is_time = Mage::getStoreConfig('deliverydate/deliverydate_general/deliverytime_enable_time');
+                                    if($is_time){
+                                        $date_format.=" ".$time_format;
+                                    }else{
+                                        $date_format.=" ";
+                                    }
+                                }
                                 if ($shipping_arrival_date!='')                                
                                     echo "Shipping Arrival Date :- ".$currentDate = date ($date_format,strtotime($shipping_arrival_date));
                                 else
                                     echo "Shipping Arrival Date :- N/A";
-                        ?>
-                        <br/>
-                        <?php 
-                            if ($_order->getShippingArrivalComments()!='')
-                                echo $_order->getShippingArrivalComments();
+                            ?>
+                            <br/>
+                            <?php 
+                                if ($_order->getShippingArrivalComments()!='')
+                                    echo $_order->getShippingArrivalComments();
+                            }
                         ?>
                         <?php else: ?>
                         <p><?php echo $this->helper('sales')->__('No shipping information available'); ?></p>
