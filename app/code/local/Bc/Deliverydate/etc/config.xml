@@ -10,7 +10,7 @@
 <config>
     <modules>
         <Bc_Deliverydate>
-            <version>0.1.4</version>
+            <version>0.1.5</version>
         </Bc_Deliverydate>
     </modules>
     <frontend>
@@ -41,7 +41,7 @@
                     </deliverydate_observer>
                 </observers>
             </checkout_controller_onepage_save_shipping_method>
-            <sales_order_save_before>
+            <sales_order_save_after>
                 <observers>
                     <order_set_shippingarrivaldate>
                         <type>model</type>
@@ -49,7 +49,7 @@
                         <method>saveShippingArrivalDate</method>
                     </order_set_shippingarrivaldate>
                 </observers>
-            </sales_order_save_before>
+            </sales_order_save_after>
         </events>
     </frontend>
     <admin>
@@ -111,7 +111,7 @@
             </updates>
         </layout>
          <events>
-            <sales_order_save_before>
+            <sales_order_save_after>
                 <observers>
                     <set_order_shippingarrivaldate>
                         <type>model</type>
@@ -119,7 +119,7 @@
                         <method>saveShippingArrivalDateAdmin</method>
                     </set_order_shippingarrivaldate>
                 </observers>
-            </sales_order_save_before>
+            </sales_order_save_after>
             
         </events>
     </adminhtml>

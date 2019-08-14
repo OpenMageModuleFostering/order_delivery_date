@@ -16,13 +16,15 @@
                 $quote =  $observer->getEvent()->getQuote();
 
                 $desiredArrivalDate = Mage::helper('deliverydate')->getFormatedDeliveryDateToSave($request->getPost('shipping_arrival_date', ''));
-                $quote->setShippingArrivalDate($desiredArrivalDate);
-                $quote->setShippingArrivalComments($request->getPost('shipping_arrival_comments'));
-                $quote->save();
+                if (isset($desiredArrivalDate) && !empty($desiredArrivalDate)){
+                    $quote->setShippingArrivalDate($desiredArrivalDate);
+                    $quote->setShippingArrivalComments($request->getPost('shipping_arrival_comments'));
+                    $quote->save();
+                }
             }
 
             return $this;
         }
-        
+
 
 }
