@@ -1,16 +1,19 @@
 {
-    "name": "OpenMageModuleFostering/order_delivery_date",
+    "name": "OpenMageModuleFostering\/order_delivery_date",
     "type": "magento-module",
     "license": "OSL-v3.0",
     "homepage": "",
     "description": "Delivery date extension will allow customer to choose preferable delivery date for order.",
     "authors": [
-    {
-        "name": "Biztech",
-        "email": "sales@biztechconsultancy.com"
-    }
-],
+        {
+            "name": "Biztech",
+            "email": "sales@biztechconsultancy.com"
+        }
+    ],
     "suggest": {
-        "magento-hackathon/magento-composer-installer": "*"
-    }
+        "magento-hackathon\/magento-composer-installer": "*"
+    },
+    "keywords": [
+        "openmage-module"
+    ]
 }
